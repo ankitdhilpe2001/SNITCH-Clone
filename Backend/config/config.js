@@ -7,7 +7,7 @@ if(!process.env.MONGO_URI){
 }
 
 if(!process.env.JWT_SECRET){
-    throw new Error('JWT_SECRET KEY is node defined in env')
+    throw new Error('JWT_SECRET KEY is not defined in env')
 }
 
 export const config = {
