@@ -2,6 +2,8 @@ import { createRoot } from 'react-dom/client'
 import App from './App/App.jsx'
 import {Provider} from "react-redux"
 import { store } from './App/App.store.js'
+import 'remixicon/fonts/remixicon.css'
+
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>
