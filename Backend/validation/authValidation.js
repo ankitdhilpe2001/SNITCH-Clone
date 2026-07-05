@@ -27,7 +27,7 @@ export const validateRegistrationUser = [
     .withMessage("Contact must be 10 to 15 digits"),
   body("password")
     .isLength({ min: 6 })
-    .withMessage("password cannot be empty anf must be 6 characters long"),
+    .withMessage("password cannot be empty and must be 6 characters long"),
   body(["fullname", "fullName"])
     .optional()
     .trim()
@@ -39,3 +39,29 @@ export const validateRegistrationUser = [
     .withMessage("must be boolean"),
   validateRequest,
 ];
+
+export const validateLogInUser = [
+  body("email")
+    .optional({ values: "falsy" })
+    .trim()
+    .isEmail()
+    .withMessage("Invalid Email Format"),
+  body("contact")
+    .optional({ values: "falsy" })
+    .trim()
+    .customSanitizer((value) => (value ? value.replace(/[^\d]/g, "") : value))
+    .matches(/^\d{10,15}$/)
+    .withMessage("Contact must be 10 to 15 digits"),
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+  body().custom((_, { req }) => {
+    if (!req.body.email && !req.body.contact) {
+      throw new Error("Email or contact is required");
+    }
+    return true;
+  }),
+  validateRequest,
+]

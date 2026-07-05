@@ -63,14 +63,39 @@ async function handleRegister(req, res, next) {
   }
 }
 
-async function handleLogin(req, res, next) {}
+async function handleLogin(req, res, next) {
+  try {
+    const { email, contact, password } = req.body;
+    const user = await User.findOne({ $or: [{ email }, { contact }] })
+
+    if (!user) {
+      const error = new Error("User not found")
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    const isPasswordMatch = await user.comparePassword(password);
+
+    if (!isPasswordMatch) {
+      const error = new Error("Invalid Credentials")
+      error.statusCode = 400;
+      return next(error);
+    }
+
+    await sendToken(user, res, "user logged in successfully")
+  } catch (error) {
+    next(error)
+  }
+}
 
 async function getMeHandler(req, res, next) {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId).select("-password");
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      const error = new Error("user not found");
+      error.statusCode = 400;
+      return next(error);
     }
     return res.status(200).json({
       message: "user found",
@@ -80,4 +105,21 @@ async function getMeHandler(req, res, next) {
     next(error);
   }
 }
-export default { handleRegister, getMeHandler };
+
+
+async function handleLogout(req, res, next) {
+  try {
+
+    res.clearCookie("token",{
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: "strict",
+    })
+
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    next(error)
+  }
+}
+
+export default { handleRegister, handleLogin, getMeHandler, handleLogout };
