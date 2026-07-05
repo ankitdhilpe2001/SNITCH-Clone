@@ -1,23 +1,44 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
+import { useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
+  const { handleRegister,  } = useAuth();
+  const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
   const [form, setForm] = useState({
-    fullName: "",
+    fullname: "",
     email: "",
     contact: "",
     password: "",
   });
 
+  //
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const {name, value} = e.target;
+    setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register →", { ...form, isSeller });
+    // sending the form object to the handleRegsiter function which expects obj
+    try {
+      const payload = {
+        fullname: form.fullname,
+        email: form.email,
+        contact: form.contact,
+        password: form.password,
+        isSeller,
+      };
+      await handleRegister(payload);
+      navigate("/home");
+    } catch (error) {
+      console.log("message : ",error.message)
+      console.log(error)
+    }
   };
 
   return (
@@ -27,39 +48,38 @@ const Register = () => {
         <span className="text-[22px] font-black tracking-[0.35em] font-brand uppercase text-black">
           SNITCH
         </span>
-      </header>
+      </header> 
 
       {/* Main Container - max-w-480px */}
-      <main className="flex-1 w-full max-w-[480px] py-20 md:py-24 flex flex-col justify-center">
+      <main className="flex-1 w-full max-w-[480px] py-20 md:py-24 flex flex-col justify-center gap-8">
         {/* Title */}
-        <div className="mb-24 text-left">
-          <p className="font-code text-[12px] tracking-[0.05em] text-[#7e7576] uppercase mb-8">
+        <div className="mb-10 -mt-8 text-left flex flex-col gap-8">
+          <p className="font-code text-[12px] tracking-[0.05em] text-[#7e7576] uppercase">
             New here?
           </p>
-          <h1 className="text-[42px] sm:text-[48px] font-bold font-brand text-black leading-[1.15]">
+          <h1 className="text-[42px] sm:text-[48px] font-bold font-brand text-black leading-none">
             CREATE ACCOUNT
           </h1>
         </div>
 
         {/* Form with generous gap for breathing space */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-8">
           {/* Full Name */}
           <div className="flex flex-col">
             <label
-              htmlFor="fullName"
+              htmlFor="fullname"
               className="font-code text-[12px] tracking-[0.05em] text-[#7e7576] uppercase mb-4"
             >
               Full Name
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-user-line mr-4 text-[20px] text-[#7e7576]" />
               <input
-                id="fullName"
-                name="fullName"
+                id="fullname"
+                name="fullname"
                 type="text"
                 autoComplete="name"
                 placeholder="Your full name"
-                value={form.fullName}
+                value={form.fullname}
                 onChange={handleChange}
                 required
                 className="w-full bg-transparent text-[16px] outline-none placeholder-[#cfc4c5]"
@@ -76,7 +96,6 @@ const Register = () => {
               Email Address
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-mail-line mr-4 text-[20px] text-[#7e7576]" />
               <input
                 id="email"
                 name="email"
@@ -100,7 +119,6 @@ const Register = () => {
               Contact Number
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-phone-line mr-4 text-[20px] text-[#7e7576]" />
               <input
                 id="contact"
                 name="contact"
@@ -124,7 +142,6 @@ const Register = () => {
               Password
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-lock-line mr-4 text-[20px] text-[#7e7576]" />
               <input
                 id="password"
                 name="password"
@@ -143,7 +160,17 @@ const Register = () => {
                 className="p-2 text-[#7e7576] hover:text-black transition-colors cursor-pointer"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                <i className={showPassword ? "ri-eye-line" : "ri-eye-off-line"} style={{ fontSize: "22px" }} />
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="w-[22px] h-[22px]"
+                  aria-hidden="true"
+                >
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
               </button>
             </div>
           </div>
@@ -157,7 +184,6 @@ const Register = () => {
               Account Type
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-store-2-line mr-4 text-[20px] text-[#7e7576]" />
               <span className="flex-1 text-[16px] text-[#1b1c1c]">
                 I am a seller
               </span>

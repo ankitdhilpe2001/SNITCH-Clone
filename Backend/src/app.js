@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRouter from "../routes/auth.routes.js"
 import errorMiddleware from "../middleware/errorMiddleware.js";
+import cors from "cors";
 
 const app = express();
 
@@ -10,13 +11,14 @@ app.use(morgan('dev'))
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());
+app.use(cors({
+    origin : process.env.FRONTEND_URL,
+    credentials:true,
+    methods: ["GET", "PUT", "PATCH", "DELETE"]
+
+}))
+// routes
 app.use("/api/auth/",authRouter);
-
-// health check
-app.get("/",(req, res)=>{
-    res.status(200).json({Message: "Server is running"})
-})
-
 
 app.use(errorMiddleware)
 export default app;

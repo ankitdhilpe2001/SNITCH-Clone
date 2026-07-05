@@ -25,13 +25,13 @@ const Login = () => {
       </header>
 
       {/* Main Container - max-w-480px */}
-      <main className="flex-1 w-full max-w-[480px] py-20 md:py-24 flex flex-col justify-center">
+      <main className="flex-1 w-full max-w-[480px] py-20 md:py-24 flex flex-col justify-center gap-8">
         {/* Title */}
-        <div className="mb-24 text-left">
-          <p className="font-code text-[12px] tracking-[0.05em] text-[#7e7576] uppercase mb-8">
+        <div className="mb-10 text-left flex flex-col gap-8">
+          <p className="font-code text-[12px] tracking-[0.05em] text-[#7e7576] uppercase">
             Welcome back
           </p>
-          <h1 className="text-[42px] sm:text-[48px] font-bold font-brand text-black leading-[1.15]">
+          <h1 className="text-[42px] sm:text-[48px] font-bold font-brand text-black leading-none">
             SIGN IN
           </h1>
         </div>
@@ -49,10 +49,11 @@ const Login = () => {
                 setLoginType("email");
                 setForm({ identifier: "", password: "" });
               }}
-              className={`flex-1 py-4 font-code text-[12px] tracking-[0.05em] uppercase border-b-2 text-center transition-all cursor-pointer ${loginType === "email"
-                ? "border-black text-black font-bold"
-                : "border-transparent text-[#7e7576]"
-                }`}
+              className={`flex-1 py-4 font-code text-[12px] tracking-[0.05em] uppercase border-b-2 text-center transition-all cursor-pointer ${
+                loginType === "email"
+                  ? "border-black text-black font-bold"
+                  : "border-transparent text-[#7e7576]"
+              }`}
             >
               Email
             </button>
@@ -63,10 +64,11 @@ const Login = () => {
                 setLoginType("contact");
                 setForm({ identifier: "", password: "" });
               }}
-              className={`flex-1 py-4 font-code text-[12px] tracking-[0.05em] uppercase border-b-2 text-center transition-all cursor-pointer ${loginType === "contact"
-                ? "border-black text-black font-bold"
-                : "border-transparent text-[#7e7576]"
-                }`}
+              className={`flex-1 py-4 font-code text-[12px] tracking-[0.05em] uppercase border-b-2 text-center transition-all cursor-pointer ${
+                loginType === "contact"
+                  ? "border-black text-black font-bold"
+                  : "border-transparent text-[#7e7576]"
+              }`}
             >
               Contact
             </button>
@@ -74,7 +76,7 @@ const Login = () => {
         </div>
 
         {/* Form with generous gap for breathing space */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-8">
           {/* Identifier Input */}
           <div className="flex flex-col">
             <label
@@ -84,9 +86,6 @@ const Login = () => {
               {loginType === "email" ? "Email Address" : "Contact Number"}
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i
-                className={`${loginType === "email" ? "ri-mail-line" : "ri-phone-line"} mr-4 text-[20px] text-[#7e7576]`}
-              />
               <input
                 id="identifier"
                 name="identifier"
@@ -112,13 +111,12 @@ const Login = () => {
               Password
             </label>
             <div className="flex items-center h-14 px-4 border-b border-[#cfc4c5] focus-within:border-black transition-all">
-              <i className="ri-lock-line mr-4 text-[20px] text-[#7e7576]" />
               <input
                 id="password"
                 name="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 value={form.password}
                 onChange={handleChange}
                 required
@@ -131,10 +129,17 @@ const Login = () => {
                 className="p-2 text-[#7e7576] hover:text-black transition-colors cursor-pointer"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                <i
-                  className={showPassword ? "ri-eye-line" : "ri-eye-off-line"}
-                  style={{ fontSize: "22px" }}
-                />
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="w-[22px] h-[22px]"
+                  aria-hidden="true"
+                >
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
               </button>
             </div>
           </div>
@@ -143,6 +148,7 @@ const Login = () => {
           <div className="flex justify-end">
             <button
               type="button"
+              id="btn-forgot-password"
               className="font-code text-[14px] tracking-[0.05em] uppercase text-[#7e7576] hover:text-black hover:underline transition-all cursor-pointer"
             >
               Forgot Password?

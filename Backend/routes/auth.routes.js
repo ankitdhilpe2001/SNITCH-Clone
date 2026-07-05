@@ -6,4 +6,6 @@ const router = Router();
 
 router.post('/register', validateRegistrationUser, authController.handleRegister)
 
+router.get('/get-me', authController.getMeHandler)
+
 export default router

@@ -24,11 +24,30 @@ async function sendToken(user, res, message) {
 
 async function handleRegister(req, res, next) {
   try {
-    const { email, contact, password, fullname, isSeller } = req.body;
+    const {
+      email,
+      contact,
+      password,
+      fullname: fullnameFromBody,
+      fullName,
+      isSeller,
+      role,
+    } = req.body;
+
+    const fullname = fullnameFromBody || fullName;
+    const resolvedRole =
+      role === "seller" || isSeller === true ? "seller" : "buyer";
+
+    if (!fullname) {
+      const err = new Error("Full name is required");
+      err.statusCode = 400;
+      return next(err);
+    }
+
     const existingUser = await User.findOne({ $or: [{ email }, { contact }] }); // check for existing user
     if (existingUser) {
       const err = new Error("User already exist");
-      err.statusCode(409);
+      err.statusCode = 409;
       return next(err);
     }
     const user = await User.create({
@@ -36,7 +55,7 @@ async function handleRegister(req, res, next) {
       contact,
       password,
       fullname,
-      role: isSeller ? "seller" : "buyer",
+      role: resolvedRole,
     });
     await sendToken(user, res, "User registered SuccesFully");
   } catch (error) {
@@ -45,4 +64,20 @@ async function handleRegister(req, res, next) {
 }
 
 async function handleLogin(req, res, next) {}
-export default { handleRegister };
+
+async function getMeHandler(req, res, next) {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({
+      message: "user found",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+export default { handleRegister, getMeHandler };
