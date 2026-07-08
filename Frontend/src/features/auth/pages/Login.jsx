@@ -1,18 +1,36 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth.js";
 
 const Login = () => {
   const [loginType, setLoginType] = useState("email"); // "email" | "contact"
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ identifier: "", password: "" });
 
+  const navigate = useNavigate();
+  const { handleLogin } = useAuth();
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login →", { loginType, ...form });
+
+    try {
+      const payload =
+        loginType === "email"
+          ? { email: form.identifier, password: form.password }
+          : { contact: form.identifier, password: form.password };
+
+      const result = await handleLogin(payload);
+
+      if (!result?.error) {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

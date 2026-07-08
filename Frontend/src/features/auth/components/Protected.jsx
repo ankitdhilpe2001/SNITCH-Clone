@@ -8,7 +8,7 @@ const Protected = ({children}) => {
         return <h1>Loading...</h1>
     }
 
-  return user ? children : <Navigate to="/" replace />
+  return user ? children : <Navigate to="/home" replace />
 }
 
 export default Protected
