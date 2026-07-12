@@ -106,7 +106,6 @@ async function getMeHandler(req, res, next) {
   }
 }
 
-
 async function handleLogout(req, res, next) {
   try {
 
@@ -122,4 +121,44 @@ async function handleLogout(req, res, next) {
   }
 }
 
-export default { handleRegister, handleLogin, getMeHandler, handleLogout };
+async function googleCallback( req, res, next){
+
+  console.log(req.user);
+  const {id, displayName, emails, photos} = req.user;
+
+  const email = emails[0].value;
+
+  const profilePic = photos[0].value;
+
+  //Check if the user is already Signed Up or not 
+
+  let user = await User.findOne({email})
+
+  //If user is not present in the DB create it 
+  if(!user){
+    user = await User.create({
+      email,
+      googleId : id,
+      fullname : displayName,
+
+    })
+  }
+
+
+  const payload = {
+    id : id, 
+  }
+
+  //generate token and sign it 
+  const token = jwt.sign(payload, config.JWT_SECRET,{expiresIn:"1d"} )
+
+  // set token in cookies.
+  res.cookie("token", token);
+
+  //cannot use sendToken as it sends res to use we want the use to redirect.
+
+
+  res.redirect("http://localhost:5173/home");
+}
+
+export default { handleRegister, handleLogin, getMeHandler, handleLogout,googleCallback };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth.js";
+import AuthButton from "../components/AuthButton.jsx";
 
 const Login = () => {
   const [loginType, setLoginType] = useState("email"); // "email" | "contact"
@@ -173,14 +174,19 @@ const Login = () => {
             </button>
           </div>
 
-          {/* Submit Button */}
           <button
-            type="submit"
-            id="btn-sign-in"
-            className="w-full h-16 flex items-center justify-center bg-black text-white font-brand font-bold text-[14px] tracking-[0.2em] uppercase hover:bg-[#1b1c1c] active:scale-[0.99] transition-all cursor-pointer mt-4"
+            type="button"
+            onClick={() => (window.location.href = "/api/auth/google")}
+            className="w-full h-14 flex items-center justify-center gap-3 border border-[#cfc4c5] bg-white text-[#1b1c1c] font-code text-[13px] font-semibold tracking-[0.12em] uppercase hover:border-black hover:bg-[#faf7f7] transition-all cursor-pointer"
           >
-            Sign In
+            <i className="ri-google-fill text-lg" aria-hidden="true"></i>
+            <span>Sign In with Google</span>
           </button>
+
+          {/* Submit Button */}
+          <AuthButton type="submit" id="btn-sign-in" className="mt-4">
+            Sign In
+          </AuthButton>
         </form>
 
         {/* Footer Link */}

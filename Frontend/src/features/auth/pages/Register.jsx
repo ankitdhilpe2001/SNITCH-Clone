@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
+import AuthButton from "../components/AuthButton.jsx";
 
 const Register = () => {
   const { handleRegister,  } = useAuth();
@@ -207,14 +208,19 @@ const Register = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
           <button
-            type="submit"
-            id="btn-create-account"
-            className="w-full h-16 flex items-center justify-center bg-black text-white font-brand font-bold text-[14px] tracking-[0.2em] uppercase hover:bg-[#1b1c1c] active:scale-[0.99] transition-all cursor-pointer"
+            type="button"
+            onClick={() => (window.location.href = "/api/auth/google")}
+            className="w-full h-14 flex items-center justify-center gap-3 border border-[#cfc4c5] bg-white text-[#1b1c1c] font-code text-[13px] font-semibold tracking-[0.12em] uppercase hover:border-black hover:bg-[#faf7f7] transition-all cursor-pointer"
           >
-            Create Account
+            <i className="ri-google-fill text-lg" aria-hidden="true"></i>
+            <span>Sign In with Google</span>
           </button>
+
+          {/* Submit Button */}
+          <AuthButton type="submit" id="btn-create-account">
+            Create Account
+          </AuthButton>
         </form>
 
         {/* Footer Link */}
