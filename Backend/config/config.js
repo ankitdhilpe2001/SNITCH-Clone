@@ -18,6 +18,9 @@ if(!process.env.GOOGLE_CLIENT_ID){
 if(!process.env.GOOGLE_CLIENT_SECRET){
     throw new Error('Google Secret is not defined in env');
 }
+if(!process.env.IMAGEKIT_PRIVATE_KEY){
+    throw new Error('ImageKit private key is not defined in env');
+}
 
 export const config = {
     NODE_ENV : process.env.NODE_ENV,
@@ -25,5 +28,6 @@ export const config = {
     JWT_SECRET : process.env.JWT_SECRET,
     FRONTEND_URL:process.env.FRONTEND_URL,
     GOOGLE_CLIENT_ID:process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET
+    GOOGLE_CLIENT_SECRET:process.env.GOOGLE_CLIENT_SECRET,
+    IMAGEKIT_PRIVATE_KEY:process.env.IMAGEKIT_PRIVATE_KEY
 }
