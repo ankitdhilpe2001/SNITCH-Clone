@@ -33,6 +33,7 @@ const Register = () => {
         contact: form.contact,
         password: form.password,
         isSeller,
+        role: isSeller ? "seller" : "buyer",
       };
       await handleRegister(payload);
       navigate("/home");

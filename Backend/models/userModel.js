@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
     contact: { type: String, required: false, unique: true },   //Patch
     password: { type: String, required: function(){return !this.googleId} },
     fullname: { type: String, required: true },
-    role:{type: String, enum: ["seller", "buyer"], default: "buyer" },
+    role:{type: String, enum: ["seller", "buyer"], default: "seller" },
     googleId:{type:String},
 })
 

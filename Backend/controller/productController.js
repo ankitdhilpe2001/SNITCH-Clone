@@ -1,9 +1,9 @@
-import Product from "../models/productsModel";
-import { uploadFile } from "../services/storage.service";
+import Product from "../models/productsModel.js";
+import { uploadFile } from "../services/storage.service.js";
 
 export async function createProduct(req, res, next) {
   try {
-    const { title, description, price } = req.body;
+    const { title, description, priceAmount, priceCurrency } = req.body;
     const seller = req.user;
     const files = req.files || [];
 
@@ -16,11 +16,11 @@ export async function createProduct(req, res, next) {
     //upload images to imagekit
     const uploadedImages = await Promise.all(
       files.map((file) =>
-        uploadFile(file.buffer, file.originalname, `/products/${seller._id}`)
+        uploadFile(file.buffer, file.originalname, `/products/${seller.fullname}-images`)
       )
     );
 
-    //to create a product we need the img urls 
+    //to create a product we need the img urls extracting img urls as obj
     const imageUrls = uploadedImages.map((image) => ({ url: image.url }));
 
     const product = await Product.create({
@@ -28,8 +28,8 @@ export async function createProduct(req, res, next) {
       description,
       seller: seller._id,
       price: {
-        amount: price,
-        currency: "INR",
+        amount: priceAmount,
+        currency: priceCurrency || "INR",
       },
       imgaes: imageUrls,
     });

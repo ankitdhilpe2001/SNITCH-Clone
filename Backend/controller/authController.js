@@ -32,11 +32,33 @@ async function handleRegister(req, res, next) {
       fullName,
       isSeller,
       role,
-    } = req.body;
+    } = req.body; 
 
     const fullname = fullnameFromBody || fullName;
-    const resolvedRole =
-      role === "seller" || isSeller === true ? "seller" : "buyer";
+    const normalizeRole = (value, sellerFlag) => {
+      //normalize the input if its string, number or return it as boolean only
+      const normalizeInput = (input) => {
+        if (typeof input === "boolean") return input;
+        if (typeof input === "string") {
+          const normalized = input.trim().toLowerCase();
+          if (normalized === "true" || normalized === "seller" || normalized === "1") return true;
+          if (normalized === "false" || normalized === "buyer" || normalized === "0") return false;
+        }
+        if (typeof input === "number") return input !== 0;
+        return Boolean(input);
+      };
+
+      const resolvedValue = normalizeInput(value);
+      if (typeof resolvedValue === "boolean") {
+        //if true return as seller
+        return resolvedValue ? "seller" : "buyer";
+      }
+
+      const resolvedSellerFlag = normalizeInput(sellerFlag);
+      return resolvedSellerFlag ? "seller" : "buyer";
+    };
+
+    const resolvedRole = normalizeRole(role, isSeller);
 
     if (!fullname) {
       const err = new Error("Full name is required");
